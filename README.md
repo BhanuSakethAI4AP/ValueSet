@@ -7,8 +7,12 @@ A FastAPI-based backend service for managing platform value sets (enums) with mu
 The backend follows a clean architecture pattern:
 
 ```
-backend/
+Repository Root/
 ├── main.py                    # Application entry point
+├── README.md                  # This documentation
+├── requirements.txt           # Python dependencies
+├── .env                      # Environment configuration
+├── .gitignore                # Git ignore rules
 ├── config/                    # Configuration management
 │   ├── settings.py           # Application settings
 │   └── database.py           # Database connection management
@@ -25,7 +29,10 @@ backend/
 ├── schema_spec/               # Data models & validation
 │   ├── models/               # Database models
 │   └── schemas/              # Pydantic schemas
-└── tests/                     # Test files
+├── src/                       # Database seeding & utilities
+│   ├── auth/                 # Auth-related utilities
+│   └── database/             # Database seeding scripts
+└── tests/                     # Comprehensive test suite
 ```
 
 ## 🚀 Quick Start
@@ -39,13 +46,14 @@ backend/
 ### 1. Installation
 
 ```bash
-cd valuesets/backend
+git clone https://github.com/BhanuSakethAI4AP/ValueSet.git
+cd ValueSet
 pip install -r requirements.txt
 ```
 
 ### 2. Environment Setup
 
-Create a `.env` file in the backend directory:
+Create a `.env` file in the project root directory:
 
 ```bash
 # MongoDB Configuration
@@ -273,21 +281,21 @@ curl -X POST "http://localhost:8001/api/v1/auth/verify-permission" \
 ### Run All Tests
 
 ```bash
-cd tests
-python test_final_crud.py
+# Run comprehensive CRUD tests
+python tests/test_final_crud.py
 ```
 
 ### Test Individual Components
 
 ```bash
-# Test authentication
-python test_auth.py
-
 # Test CRUD operations  
-python test_simple_crud.py
+python tests/test_simple_crud.py
 
 # Comprehensive endpoint testing
-python test_all_endpoints.py
+python tests/test_all_endpoints.py
+
+# Test with dummy data
+python tests/test_crud_operations.py
 ```
 
 ### Expected Test Results
