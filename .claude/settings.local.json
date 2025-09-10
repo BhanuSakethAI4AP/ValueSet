@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/core_components/**)",
+      "Bash(mkdir:*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(dir)",
+      "Bash(dir:*)",
+      "Bash(where mongod)",
+      "Bash(npx create-react-app:*)",
+      "Bash(npm install:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(npm start)",
+      "Bash(set PORT=3001)",
+      "Bash(npx:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(set PORT=3003)",
+      "Bash(set PORT=3004)",
+      "Bash(copy index.jsx index.js)",
+      "Bash(findstr:*)",
+      "Bash(tree:*)",
+      "Bash(move:*)",
+      "Bash(copy test_all_endpoints.py tests )",
+      "Bash(del test_all_endpoints.py)",
+      "Bash(del test_create_endpoint.py)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git reset:*)",
+      "Bash(git restore:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
