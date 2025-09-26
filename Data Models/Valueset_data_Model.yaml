@@ -1,0 +1,206 @@
+dataModel: value-set
+
+collectionInformation:
+  collectionName: value_sets
+  displayName: Value Sets
+  description: Stores globally unique named sets of codes with multilingual labels.
+  purpose: Provides reusable enumerations (e.g., severity levels, statuses) for use across modules.
+  platform: MongoDB
+  auditFields:
+    - createdAt
+    - createdBy
+    - updatedAt
+    - updatedBy
+  softDelete:
+    enabled: false
+    field: isDeleted
+  statusField:
+    enabled: true
+    allowed: ["active", "archived"]
+
+fields:
+  - name: key
+    label: Value Set Key
+    purpose: Globally unique identifier for the value set.
+    details:
+      type: String
+      length: 100
+      required: true
+      nullable: false
+      default: none
+      pk: false
+      fk: none
+      autoInc: false
+      encrypt:
+        atRest: false
+        mask: false
+
+  - name: status
+    label: Status
+    purpose: Lifecycle status of the value set.
+    details:
+      type: String
+      length: 20
+      required: true
+      nullable: false
+      default: active
+      pk: false
+      fk: none
+      autoInc: false
+      encrypt:
+        atRest: false
+        mask: false
+
+  - name: module
+    label: Module
+    purpose: Identifies which functional module this value set belongs to.
+    details:
+      type: String
+      length: 50
+      required: true
+      nullable: false
+      default: Core
+      pk: false
+      fk: none
+      autoInc: false
+      encrypt:
+        atRest: false
+        mask: false
+
+  - name: description
+    label: Description
+    purpose: Explains what the value set represents.
+    details:
+      type: String
+      length: 500
+      required: false
+      nullable: true
+      default: none
+      pk: false
+      fk: none
+      autoInc: false
+      encrypt:
+        atRest: false
+        mask: false
+
+  - name: items
+    label: Items
+    purpose: Holds the individual codes and their multilingual labels.
+    details:
+      type: Array<Object>
+      required: true
+      nullable: false
+      default: none
+      pk: false
+      fk: none
+      autoInc: false
+      encrypt:
+        atRest: false
+        mask: false
+    subFields:
+      - name: code
+        label: Item Code
+        purpose: Unique code within this value set.
+        details:
+          type: String
+          length: 50
+          required: true
+          nullable: false
+          default: none
+          pk: false
+          fk: none
+          autoInc: false
+          encrypt:
+            atRest: false
+            mask: false
+      - name: labels
+        label: Labels
+        purpose: Multilingual display text for the code.
+        details:
+          type: Object
+          required: true
+          nullable: false
+          default: none
+          pk: false
+          fk: none
+          autoInc: false
+          encrypt:
+            atRest: false
+            mask: false
+        subFields:
+          - name: en
+            label: English Label
+            purpose: Required label in English.
+            details:
+              type: String
+              length: 200
+              required: true
+              nullable: false
+              default: none
+          - name: hi
+            label: Hindi Label
+            purpose: Optional label in Hindi.
+            details:
+              type: String
+              length: 200
+              required: false
+              nullable: true
+              default: none
+
+  - name: createdAt
+    label: Created At
+    purpose: Timestamp when the value set was created.
+    details:
+      type: DateTime
+      required: true
+      nullable: false
+      default: none
+
+  - name: updatedAt
+    label: Updated At
+    purpose: Timestamp of last update.
+    details:
+      type: DateTime
+      required: false
+      nullable: true
+      default: none
+
+constraints:
+  primaryKey: _id (ObjectId)
+  unique:
+    - key
+  validationRules:
+    - "status ∈ {active, archived}"
+    - "items[].code must be unique per value set (case-sensitive)"
+    - "items[].labels.en required"
+    - "1 ≤ len(items) ≤ 500"
+
+relationships: []
+
+indexes:
+  - name: idx_value_sets__key_asc
+    key: { key: 1 }
+    unique: true
+  - name: idx_value_sets__status_asc
+    key: { status: 1 }
+    unique: false
+  - name: idx_value_sets__description_text
+    key: { description: text }
+    unique: false
+    note: used for admin search
+
+securityAndCompliance:
+  classification: Internal
+  retention: Permanent until explicitly archived or deleted
+  masking: None
+
+performance:
+  expectedVolume: Medium
+  rpsPeak: Low
+  readWriteRatio: 90/10
+  hotspots: [key, items.code]
+
+parkUnparkRegister:
+  - issue: "Whether additional languages beyond 'hi' need predefined keys"
+    owner: Product Analyst
+    unparkCriteria: "Confirm supported language set from localization team"
