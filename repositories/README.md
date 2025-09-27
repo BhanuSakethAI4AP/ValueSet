@@ -66,6 +66,55 @@ Creates a new value set document.
 - Creating new value sets in the database
 - Initial data insertion
 
+**Input Format:**
+```python
+{
+    'key': 'COUNTRY_CODES',
+    'module': 'geography',
+    'status': 'active',
+    'description': 'ISO country codes',
+    'items': [
+        {
+            'code': 'US',
+            'labels': {'en': 'United States', 'hi': 'संयुक्त राज्य अमेरिका'}
+        },
+        {
+            'code': 'IN',
+            'labels': {'en': 'India', 'hi': 'भारत'}
+        }
+    ],
+    'createdAt': datetime(2024, 1, 15, 10, 30, 0),
+    'createdBy': 'user123',
+    'updatedAt': None,
+    'updatedBy': None
+}
+```
+
+**Output Format:**
+```python
+{
+    '_id': '507f1f77bcf86cd799439011',  # Generated MongoDB ObjectId (as string)
+    'key': 'COUNTRY_CODES',
+    'module': 'geography',
+    'status': 'active',
+    'description': 'ISO country codes',
+    'items': [
+        {
+            'code': 'US',
+            'labels': {'en': 'United States', 'hi': 'संयुक्त राज्य अमेरिका'}
+        },
+        {
+            'code': 'IN',
+            'labels': {'en': 'India', 'hi': 'भारत'}
+        }
+    ],
+    'createdAt': datetime(2024, 1, 15, 10, 30, 0),
+    'createdBy': 'user123',
+    'updatedAt': None,
+    'updatedBy': None
+}
+```
+
 **Example:**
 ```python
 value_set_data = {
@@ -81,16 +130,6 @@ value_set_data = {
 
 result = await repository.create(value_set_data)
 print(f"Created with ID: {result['_id']}")
-```
-
-**Returns:**
-```python
-{
-    '_id': '507f1f77bcf86cd799439011',  # Generated MongoDB ID
-    'key': 'COUNTRY_CODES',
-    'module': 'geography',
-    # ... all other fields
-}
 ```
 
 ---
@@ -202,6 +241,52 @@ Lists value sets with pagination and filtering.
 - Filtering by status or module
 - Admin dashboards
 
+**Input Format:**
+```python
+filter_query = {
+    'status': 'active',  # Optional filter
+    'module': 'healthcare'  # Optional filter
+}
+skip = 0  # Number of records to skip
+limit = 20  # Max records to return
+sort_by = [('createdAt', -1)]  # Sort by createdAt descending
+```
+
+**Output Format:**
+```python
+(
+    [  # List of document dictionaries
+        {
+            '_id': '507f1f77bcf86cd799439011',
+            'key': 'MEDICAL_SPECIALTIES',
+            'status': 'active',
+            'module': 'healthcare',
+            'description': 'Medical specialties',
+            'items': [
+                {'code': 'CARDIO', 'labels': {'en': 'Cardiology'}}
+            ],
+            'createdAt': datetime(2024, 1, 15, 10, 30, 0),
+            'createdBy': 'user123',
+            'updatedAt': None,
+            'updatedBy': None
+        },
+        {
+            '_id': '507f1f77bcf86cd799439012',
+            'key': 'DIAGNOSIS_CODES',
+            'status': 'active',
+            'module': 'healthcare',
+            'description': 'Diagnosis codes',
+            'items': [...],
+            'createdAt': datetime(2024, 1, 14, 9, 15, 0),
+            'createdBy': 'admin',
+            'updatedAt': None,
+            'updatedBy': None
+        }
+    ],
+    45  # Total count matching filter (not just this page)
+)
+```
+
 **Example:**
 ```python
 # Get active value sets, page 1, 20 per page
@@ -216,17 +301,6 @@ documents, total = await repository.list_value_sets(
 print(f"Showing {len(documents)} of {total} total")
 for doc in documents:
     print(f"- {doc['key']}: {len(doc['items'])} items")
-```
-
-**Returns:**
-```python
-(
-    [  # List of documents
-        {'_id': '...', 'key': 'SET1', ...},
-        {'_id': '...', 'key': 'SET2', ...}
-    ],
-    45  # Total count matching filter
-)
 ```
 
 ---
@@ -499,6 +573,34 @@ Searches for items by code or label text.
 - User search features
 - Finding specific items
 
+**Input Format:**
+```python
+search_query = 'United'  # Text to search for
+value_set_key = 'COUNTRY_CODES'  # Optional: specific value set, None for all
+language_code = 'en'  # Language to search in labels
+```
+
+**Output Format:**
+```python
+[
+    {
+        '_id': '507f1f77bcf86cd799439011',
+        'key': 'COUNTRY_CODES',
+        'module': 'geography',
+        'matchingItems': [  # Only items that match, not all items
+            {
+                'code': 'US',
+                'labels': {'en': 'United States', 'hi': 'संयुक्त राज्य अमेरिका'}
+            },
+            {
+                'code': 'GB',
+                'labels': {'en': 'United Kingdom', 'hi': 'यूनाइटेड किंगडम'}
+            }
+        ]
+    }
+]
+```
+
 **Example:**
 ```python
 # Search for countries containing 'United'
@@ -512,21 +614,6 @@ for value_set in results:
     print(f"Found {len(value_set['matchingItems'])} matches in {value_set['key']}")
     for item in value_set['matchingItems']:
         print(f"  {item['code']}: {item['labels']['en']}")
-```
-
-**Returns:**
-```python
-[
-    {
-        '_id': '507f...',
-        'key': 'COUNTRY_CODES',
-        'module': 'geography',
-        'matchingItems': [
-            {'code': 'US', 'labels': {'en': 'United States'}},
-            {'code': 'GB', 'labels': {'en': 'United Kingdom'}}
-        ]
-    }
-]
 ```
 
 ---

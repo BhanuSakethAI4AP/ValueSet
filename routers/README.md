@@ -43,22 +43,80 @@ Response: ValueSetResponseSchema
 - Initial population of the system with value sets
 - Adding a new standardized code list to the system
 
+**Input Format:**
+```json
+{
+    "key": "medical_specialties",
+    "status": "active",
+    "module": "healthcare",
+    "description": "List of medical specialties",
+    "items": [
+        {
+            "code": "CARDIO",
+            "labels": {
+                "en": "Cardiology",
+                "hi": "हृदय रोग विज्ञान"
+            }
+        },
+        {
+            "code": "NEURO",
+            "labels": {
+                "en": "Neurology",
+                "hi": "तंत्रिका विज्ञान"
+            }
+        }
+    ],
+    "createdBy": "user123"
+}
+```
+
+**Output Format:**
+```json
+{
+    "_id": "507f1f77bcf86cd799439011",
+    "key": "medical_specialties",
+    "status": "active",
+    "module": "healthcare",
+    "description": "List of medical specialties",
+    "items": [
+        {
+            "code": "CARDIO",
+            "labels": {
+                "en": "Cardiology",
+                "hi": "हृदय रोग विज्ञान"
+            }
+        },
+        {
+            "code": "NEURO",
+            "labels": {
+                "en": "Neurology",
+                "hi": "तंत्रिका विज्ञान"
+            }
+        }
+    ],
+    "createdAt": "2024-01-15T10:30:00Z",
+    "createdBy": "user123",
+    "updatedAt": null,
+    "updatedBy": null
+}
+```
+
 **Example:**
 ```python
 import httpx
 
 create_data = {
     "key": "medical_specialties",
-    "name": "Medical Specialties",
+    "status": "active",
     "module": "healthcare",
     "description": "List of medical specialties",
     "items": [
         {
             "code": "CARDIO",
-            "labels": {"en": "Cardiology", "es": "Cardiología"}
+            "labels": {"en": "Cardiology", "hi": "हृदय रोग विज्ञान"}
         }
     ],
-    "created_by": "user123"
+    "createdBy": "user123"
 }
 
 async with httpx.AsyncClient() as client:
@@ -79,6 +137,42 @@ Response: ValueSetResponseSchema
 - Displaying value set details to users
 - Verifying a value set exists before operations
 - Retrieving complete value set including all items
+
+**Input Format:**
+```
+GET /api/v1/value-sets/medical_specialties
+```
+
+**Output Format:**
+```json
+{
+    "_id": "507f1f77bcf86cd799439011",
+    "key": "medical_specialties",
+    "status": "active",
+    "module": "healthcare",
+    "description": "List of medical specialties",
+    "items": [
+        {
+            "code": "CARDIO",
+            "labels": {
+                "en": "Cardiology",
+                "hi": "हृदय रोग विज्ञान"
+            }
+        },
+        {
+            "code": "NEURO",
+            "labels": {
+                "en": "Neurology",
+                "hi": "तंत्रिका विज्ञान"
+            }
+        }
+    ],
+    "createdAt": "2024-01-15T10:30:00Z",
+    "createdBy": "user123",
+    "updatedAt": "2024-01-16T14:20:00Z",
+    "updatedBy": "editor"
+}
+```
 
 **Example:**
 ```python
@@ -102,13 +196,45 @@ Response: ValueSetResponseSchema
 - Changing value set configuration without touching items
 - Updating module assignment or status
 
+**Input Format:**
+```json
+{
+    "description": "Comprehensive list of medical specialties",
+    "status": "active",
+    "updatedBy": "admin_user"
+}
+```
+
+**Output Format:**
+```json
+{
+    "_id": "507f1f77bcf86cd799439011",
+    "key": "medical_specialties",
+    "status": "active",
+    "module": "healthcare",
+    "description": "Comprehensive list of medical specialties",
+    "items": [
+        {
+            "code": "CARDIO",
+            "labels": {
+                "en": "Cardiology",
+                "hi": "हृदय रोग विज्ञान"
+            }
+        }
+    ],
+    "createdAt": "2024-01-15T10:30:00Z",
+    "createdBy": "user123",
+    "updatedAt": "2024-01-16T14:20:00Z",
+    "updatedBy": "admin_user"
+}
+```
+
 **Example:**
 ```python
 update_data = {
-    "name": "Updated Medical Specialties",
     "description": "Comprehensive list of medical specialties",
-    "status": "ACTIVE",
-    "updated_by": "admin_user"
+    "status": "active",
+    "updatedBy": "admin_user"
 }
 
 async with httpx.AsyncClient() as client:
@@ -129,6 +255,43 @@ Response: PaginatedValueSetResponse
 - Browsing and filtering value sets
 - Building selection dropdowns
 
+**Input Format:**
+```
+GET /api/v1/value-sets/?status=active&module=healthcare&skip=0&limit=50
+```
+
+**Output Format:**
+```json
+{
+    "total": 150,
+    "skip": 0,
+    "limit": 50,
+    "items": [
+        {
+            "_id": "507f1f77bcf86cd799439011",
+            "key": "medical_specialties",
+            "status": "active",
+            "module": "healthcare",
+            "description": "Medical specialties",
+            "itemCount": 25,
+            "createdAt": "2024-01-15T10:30:00Z",
+            "updatedAt": "2024-01-16T14:20:00Z"
+        },
+        {
+            "_id": "507f1f77bcf86cd799439012",
+            "key": "diagnosis_codes",
+            "status": "active",
+            "module": "healthcare",
+            "description": "Diagnosis codes",
+            "itemCount": 450,
+            "createdAt": "2024-01-14T09:15:00Z",
+            "updatedAt": null
+        }
+    ],
+    "hasMore": true
+}
+```
+
 **Example:**
 ```python
 # Get first 50 active healthcare value sets
@@ -136,7 +299,7 @@ async with httpx.AsyncClient() as client:
     response = await client.get(
         "http://localhost:8000/api/v1/value-sets/",
         params={
-            "status": "ACTIVE",
+            "status": "active",
             "module": "healthcare",
             "skip": 0,
             "limit": 50
@@ -160,14 +323,41 @@ Response: List[SearchItemsResponseSchema]
 - Finding items by code or label across multiple value sets
 - Building search interfaces for value set items
 
+**Input Format:**
+```json
+{
+    "query": "cardio",
+    "valueSetKey": "medical_specialties",
+    "languageCode": "en"
+}
+```
+
+**Output Format:**
+```json
+[
+    {
+        "valueSetKey": "medical_specialties",
+        "valueSetModule": "healthcare",
+        "matchingItems": [
+            {
+                "code": "CARDIO",
+                "labels": {
+                    "en": "Cardiology",
+                    "hi": "हृदय रोग विज्ञान"
+                }
+            }
+        ],
+        "totalMatches": 1
+    }
+]
+```
+
 **Example:**
 ```python
 search_params = {
-    "search_text": "cardio",
-    "value_set_keys": ["medical_specialties"],
-    "language_code": "en",
-    "exact_match": False,
-    "limit": 50
+    "query": "cardio",
+    "valueSetKey": "medical_specialties",
+    "languageCode": "en"
 }
 
 async with httpx.AsyncClient() as client:
@@ -216,14 +406,59 @@ Response: ValueSetResponseSchema
 - Extending value sets with new codes
 - When bulk operations are not needed
 
+**Input Format:**
+```json
+{
+    "item": {
+        "code": "ORTHO",
+        "labels": {
+            "en": "Orthopedics",
+            "hi": "हड्डी रोग"
+        }
+    },
+    "updatedBy": "user123"
+}
+```
+
+**Output Format:**
+```json
+{
+    "_id": "507f1f77bcf86cd799439011",
+    "key": "medical_specialties",
+    "status": "active",
+    "module": "healthcare",
+    "description": "Medical specialties",
+    "items": [
+        {
+            "code": "CARDIO",
+            "labels": {
+                "en": "Cardiology",
+                "hi": "हृदय रोग विज्ञान"
+            }
+        },
+        {
+            "code": "ORTHO",
+            "labels": {
+                "en": "Orthopedics",
+                "hi": "हड्डी रोग"
+            }
+        }
+    ],
+    "createdAt": "2024-01-15T10:30:00Z",
+    "createdBy": "user123",
+    "updatedAt": "2024-01-17T09:45:00Z",
+    "updatedBy": "user123"
+}
+```
+
 **Example:**
 ```python
 request = {
     "item": {
-        "code": "NEUROLOGY",
-        "labels": {"en": "Neurology", "es": "Neurología"}
+        "code": "ORTHO",
+        "labels": {"en": "Orthopedics", "hi": "हड्डी रोग"}
     },
-    "updated_by": "user123"
+    "updatedBy": "user123"
 }
 
 async with httpx.AsyncClient() as client:
@@ -293,7 +528,7 @@ async with httpx.AsyncClient() as client:
 #### 11. Bulk Add Items
 ```python
 POST /api/v1/value-sets/{key}/items/bulk-add
-Body: {items: List[ItemCreateSchema], updated_by: str}
+Body: {items: List[ItemCreateSchema], updatedBy: str}
 Response: BulkOperationResponseSchema
 ```
 
@@ -301,6 +536,46 @@ Response: BulkOperationResponseSchema
 - Adding multiple items at once
 - Importing or migrating large sets of codes
 - Initial value set population
+
+**Input Format:**
+```json
+{
+    "items": [
+        {
+            "code": "NEURO",
+            "labels": {
+                "en": "Neurology",
+                "hi": "तंत्रिका विज्ञान"
+            }
+        },
+        {
+            "code": "ORTHO",
+            "labels": {
+                "en": "Orthopedics",
+                "hi": "हड्डी रोग"
+            }
+        },
+        {
+            "code": "DERM",
+            "labels": {
+                "en": "Dermatology",
+                "hi": "त्वचा विज्ञान"
+            }
+        }
+    ],
+    "updatedBy": "admin"
+}
+```
+
+**Output Format:**
+```json
+{
+    "successful": 3,
+    "failed": 0,
+    "errors": [],
+    "processedKeys": ["medical_specialties"]
+}
+```
 
 **Example:**
 ```python
@@ -310,7 +585,7 @@ bulk_data = {
         {"code": "ORTHO", "labels": {"en": "Orthopedics"}},
         {"code": "DERM", "labels": {"en": "Dermatology"}}
     ],
-    "updated_by": "admin"
+    "updatedBy": "admin"
 }
 
 async with httpx.AsyncClient() as client:
@@ -319,7 +594,7 @@ async with httpx.AsyncClient() as client:
         json=bulk_data
     )
     result = response.json()
-    print(f"Success: {result['success_count']}, Failed: {result['failure_count']}")
+    print(f"Success: {result['successful']}, Failed: {result['failed']}")
 ```
 
 #### 12. Bulk Update Items

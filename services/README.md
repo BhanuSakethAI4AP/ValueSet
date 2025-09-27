@@ -73,6 +73,52 @@ Creates a new value set with comprehensive validation.
 - Creating new value sets
 - Initial data setup
 
+**Input Format (ValueSetCreateSchema):**
+```python
+{
+    "key": "PRIORITY_LEVELS",
+    "status": "active",  # StatusEnum.ACTIVE
+    "module": "task_management",
+    "description": "Priority levels for task management",
+    "items": [
+        {
+            "code": "HIGH",
+            "labels": {"en": "High Priority", "hi": "उच्च प्राथमिकता"}
+        },
+        {
+            "code": "MEDIUM",
+            "labels": {"en": "Medium Priority", "hi": "मध्यम प्राथमिकता"}
+        }
+    ],
+    "createdBy": "user123"
+}
+```
+
+**Output Format (ValueSetResponseSchema):**
+```python
+{
+    "id": "507f1f77bcf86cd799439011",  # MongoDB _id
+    "key": "PRIORITY_LEVELS",
+    "status": "active",
+    "module": "task_management",
+    "description": "Priority levels for task management",
+    "items": [
+        {
+            "code": "HIGH",
+            "labels": {"en": "High Priority", "hi": "उच्च प्राथमिकता"}
+        },
+        {
+            "code": "MEDIUM",
+            "labels": {"en": "Medium Priority", "hi": "मध्यम प्राथमिकता"}
+        }
+    ],
+    "createdAt": "2024-01-15T10:30:00Z",
+    "createdBy": "user123",
+    "updatedAt": None,
+    "updatedBy": None
+}
+```
+
 **Example:**
 ```python
 from schemas.value_set_schemas_enhanced import (
@@ -171,6 +217,38 @@ Lists value sets with filtering and pagination.
 - Admin dashboards
 - Searching with filters
 
+**Input Format (ListValueSetsQuerySchema):**
+```python
+{
+    "status": "active",  # Optional: StatusEnum.ACTIVE
+    "module": "task_management",  # Optional
+    "skip": 0,  # Default: 0
+    "limit": 20  # Default: 100, Max: 1000
+}
+```
+
+**Output Format (PaginatedValueSetResponse):**
+```python
+{
+    "total": 50,  # Total matching records
+    "skip": 0,  # Current skip offset
+    "limit": 20,  # Page size
+    "items": [  # Value set summaries (without full item lists)
+        {
+            "id": "507f1f77bcf86cd799439011",
+            "key": "PRIORITY_LEVELS",
+            "status": "active",
+            "module": "task_management",
+            "description": "Priority levels",
+            "itemCount": 3,  # Count of items, not full list
+            "createdAt": "2024-01-15T10:30:00Z",
+            "updatedAt": "2024-01-16T14:20:00Z"
+        }
+    ],
+    "hasMore": True  # More pages available
+}
+```
+
 **Example:**
 ```python
 from schemas.value_set_schemas_enhanced import ListValueSetsQuerySchema, StatusEnum
@@ -191,17 +269,6 @@ print(f"Has more: {response.hasMore}")
 
 for item in response.items:
     print(f"- {item.key}: {item.itemCount} items")
-```
-
-**Returns:**
-```python
-PaginatedValueSetResponse(
-    total=50,           # Total matching records
-    skip=0,             # Current skip offset
-    limit=20,           # Page size
-    items=[...],        # Value set summaries
-    hasMore=True        # More pages available
-)
 ```
 
 ---
@@ -525,6 +592,36 @@ Searches for items across value sets by text.
 - User search
 - Finding specific codes
 
+**Input Format (SearchItemsQuerySchema):**
+```python
+{
+    "query": "Priority",  # Required: search text
+    "valueSetKey": None,  # Optional: filter by specific value set
+    "languageCode": "en"  # Default: "en"
+}
+```
+
+**Output Format (List[SearchItemsResponseSchema]):**
+```python
+[
+    {
+        "valueSetKey": "PRIORITY_LEVELS",
+        "valueSetModule": "task_management",
+        "matchingItems": [
+            {
+                "code": "HIGH",
+                "labels": {"en": "High Priority", "hi": "उच्च प्राथमिकता"}
+            },
+            {
+                "code": "MEDIUM",
+                "labels": {"en": "Medium Priority", "hi": "मध्यम प्राथमिकता"}
+            }
+        ],
+        "totalMatches": 2
+    }
+]
+```
+
 **Example:**
 ```python
 from schemas.value_set_schemas_enhanced import SearchItemsQuerySchema
@@ -543,18 +640,6 @@ for result in results:
     print(f"Matches: {result.totalMatches}")
     for item in result.matchingItems:
         print(f"  - {item.code}: {item.labels.en}")
-```
-
-**Returns:**
-```python
-[
-    SearchItemsResponseSchema(
-        valueSetKey="PRIORITY_LEVELS",
-        valueSetModule="task_management",
-        matchingItems=[<matching items>],
-        totalMatches=3
-    )
-]
 ```
 
 ---

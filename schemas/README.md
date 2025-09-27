@@ -75,6 +75,14 @@ Multilingual display text for items (creation/full labels).
 - Displaying complete item information
 - When English label is mandatory
 
+**Format:**
+```json
+{
+    "en": "Cardiology",
+    "hi": "हृदय रोग विज्ञान"
+}
+```
+
 **Example:**
 ```python
 from schemas.value_set_schemas_enhanced import LabelSchema
@@ -114,6 +122,17 @@ Schema for creating new items.
 - Creating new items
 - Bulk adding items
 - Initial value set population
+
+**Format:**
+```json
+{
+    "code": "CARDIO",
+    "labels": {
+        "en": "Cardiology",
+        "hi": "हृदय रोग विज्ञान"
+    }
+}
+```
 
 **Example:**
 ```python
@@ -195,6 +214,33 @@ Schema for creating new value sets.
 - Importing value sets
 - Bulk value set creation
 
+**Format:**
+```json
+{
+    "key": "medical_specialties",
+    "status": "active",
+    "module": "healthcare",
+    "description": "Medical specialty codes",
+    "items": [
+        {
+            "code": "CARDIO",
+            "labels": {
+                "en": "Cardiology",
+                "hi": "हृदय रोग विज्ञान"
+            }
+        },
+        {
+            "code": "NEURO",
+            "labels": {
+                "en": "Neurology",
+                "hi": "तंत्रिका विज्ञान"
+            }
+        }
+    ],
+    "createdBy": "user123"
+}
+```
+
 **Example:**
 ```python
 from schemas.value_set_schemas_enhanced import (
@@ -274,9 +320,8 @@ Complete value set with all fields including audit data.
 - API responses for GET/POST/PUT operations
 - Displaying full value set details
 
-**Example:**
-```python
-# API returns this structure:
+**Format:**
+```json
 {
     "_id": "507f1f77bcf86cd799439011",
     "key": "medical_specialties",
@@ -284,7 +329,20 @@ Complete value set with all fields including audit data.
     "module": "healthcare",
     "description": "Medical specialties",
     "items": [
-        {"code": "CARDIO", "labels": {"en": "Cardiology"}}
+        {
+            "code": "CARDIO",
+            "labels": {
+                "en": "Cardiology",
+                "hi": "हृदय रोग विज्ञान"
+            }
+        },
+        {
+            "code": "NEURO",
+            "labels": {
+                "en": "Neurology",
+                "hi": "तंत्रिका विज्ञान"
+            }
+        }
     ],
     "createdAt": "2024-01-15T10:30:00Z",
     "createdBy": "user123",
@@ -409,15 +467,35 @@ Paginated response for value set listings.
 - Paginated displays
 - Infinite scroll implementations
 
-**Example:**
-```python
-# API returns:
+**Format:**
+```json
 {
     "total": 150,
     "skip": 0,
     "limit": 50,
-    "items": [...],
-    "hasMore": True
+    "items": [
+        {
+            "_id": "507f1f77bcf86cd799439011",
+            "key": "medical_specialties",
+            "status": "active",
+            "module": "healthcare",
+            "description": "Medical specialties",
+            "itemCount": 25,
+            "createdAt": "2024-01-15T10:30:00Z",
+            "updatedAt": "2024-01-16T14:20:00Z"
+        },
+        {
+            "_id": "507f1f77bcf86cd799439012",
+            "key": "diagnosis_codes",
+            "status": "active",
+            "module": "healthcare",
+            "description": "Diagnosis codes",
+            "itemCount": 450,
+            "createdAt": "2024-01-14T09:15:00Z",
+            "updatedAt": null
+        }
+    ],
+    "hasMore": true
 }
 ```
 
