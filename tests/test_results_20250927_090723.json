@@ -1,0 +1,62 @@
+{
+  "timestamp": "2025-09-27T09:07:23.212017",
+  "summary": {
+    "total": 21,
+    "passed": 21,
+    "failed": 0,
+    "success_rate": "100.00%"
+  },
+  "errors": [],
+  "test_data": {
+    "basic_value_set": {
+      "id": "68d7a943d249f112127c9601",
+      "key": "TEST_BASIC_1758944234.912015",
+      "status": "active",
+      "module": "Testing",
+      "description": "Basic test value set",
+      "items": [
+        {
+          "code": "ITEM001",
+          "labels": {
+            "en": "Item One",
+            "hi": "\u0906\u0907\u091f\u092e \u090f\u0915"
+          }
+        },
+        {
+          "code": "ITEM002",
+          "labels": {
+            "en": "Item Two",
+            "hi": "\u0906\u0907\u091f\u092e \u0926\u094b"
+          }
+        }
+      ],
+      "createdAt": "2025-09-27 09:07:15.001587",
+      "createdBy": "test_user",
+      "updatedAt": null,
+      "updatedBy": null
+    },
+    "statistics": {
+      "total_value_sets": 31,
+      "by_status": {
+        "active": 28,
+        "archived": 3
+      },
+      "by_module": {
+        "Roles": 1,
+        "BulkTest": 7,
+        "Fruits": 1,
+        "ListTest": 5,
+        "Testing": 17
+      },
+      "items_statistics": {
+        "_id": null,
+        "total_items": 547,
+        "avg_items": 17.64516129032258,
+        "max_items": 500,
+        "min_items": 1,
+        "total_capacity": 15500,
+        "capacity_used_percent": 0.0003529032258064516
+      }
+    }
+  }
+}
