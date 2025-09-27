@@ -572,26 +572,6 @@ MongoDB indexes on:
 - `module` - Fast module filtering
 - `items.code` - Fast item searches
 
-## Best Practices
-
-### Do's ✅
-- Use the Service Layer for all business operations
-- Validate data with Pydantic schemas
-- Use bulk operations for multiple items
-- Archive instead of delete
-- Provide meaningful audit fields (createdBy, updatedBy)
-- Use pagination for lists
-- Handle errors gracefully
-- Follow the 3-layer architecture
-
-### Don'ts ❌
-- Don't call Repository directly from Routers (bypass business logic)
-- Don't implement business logic in Routers or Repositories
-- Don't hard-delete data (use archive instead)
-- Don't skip validation by using plain dicts
-- Don't mix concerns between layers
-- Don't create duplicate schemas for same purpose
-- Don't ignore pagination for large datasets
 
 ## API Documentation
 
@@ -651,41 +631,6 @@ uvicorn main:app --port 8001
 # On Windows: netstat -ano | findstr :8000
 ```
 
-## Future Enhancements
-
-Potential additions to the system:
-- Versioning for value sets (track changes over time)
-- Import/export to Excel/CSV
-- Role-based access control (RBAC)
-- Change history and rollback
-- Value set dependencies and relationships
-- Custom validation rules per value set
-- Caching layer (Redis) for frequently accessed value sets
-- GraphQL API alongside REST
-- Webhooks for value set changes
-
-## Contributing
-
-To extend this system:
-
-1. **Adding New Endpoints:**
-   - Add schema to `schemas/value_set_schemas_enhanced.py`
-   - Add service method to `services/value_set_service.py`
-   - Add repository method to `repositories/value_set_repository.py` (if needed)
-   - Add router endpoint to `routers/value_set_router.py`
-   - Add test case to `tests/test.py`
-
-2. **Adding New Fields:**
-   - Update Pydantic schemas in `schemas/`
-   - Update service logic if business rules change
-   - Update repository queries if database changes needed
-   - Update tests
-
-3. **Follow the Pattern:**
-   - Router handles HTTP → calls Service
-   - Service handles logic → calls Repository
-   - Repository handles database → returns data
-   - Schemas validate everywhere
 
 ## License
 
